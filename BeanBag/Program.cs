@@ -22,25 +22,13 @@ public class BeanBag : Form
     //  of the game.
     private Timer gameTimer;
 
-    private double z;     //  altitude of beanbag
-    private double z0;    //  initial altitude of beanbag
-    private double vz0;   //  initial vertical velocity
-    private double x;     //  horizontal location
-    private double x0;    //  initial horizontal location
-    private double vx0;   //  initial horizontal velocity
-    private double time;
+    // The physics of the beanbag!
+    private bagBall bBall;
 
     public BeanBag()
     {
-
         //  Initialize the beanbag parameters.
-        z = 1.7;
-        z0 = 1.7;
-        vz0 = 0.0;
-        x = 0.5;
-        x0 = 0.5;
-        vx0 = 0.0;
-        time = 0.0;
+        bBall = new bagBall(0.5, 1.7, 0.0, 0.0, 0.0);
 
         //  Set up images
         playerIcon = Image.FromFile("tiuquetiraelsac.jpg");
@@ -138,8 +126,9 @@ public class BeanBag : Form
     {
 
         //  Extract initial data from the textfields.
-        vx0 = Convert.ToDouble(vxTextBox.Text);
-        vz0 = Convert.ToDouble(vzTextBox.Text);
+        double vx0 = Convert.ToDouble(vxTextBox.Text);
+        double vz0 = Convert.ToDouble(vzTextBox.Text);
+        bBall = new bagBall(0.5, 1.7, vx0, vz0, 0.0);
 
         //  Start the box sliding using a Timer object
         //  to slow down the action.
@@ -152,14 +141,8 @@ public class BeanBag : Form
         //  stop the timer.
         gameTimer.Stop();
 
-        //  Reset the box and ball location and time;
-        z = 1.7;
-        z0 = 1.7;
-        vz0 = 0.0;
-        x = 0.5;
-        x0 = 0.5;
-        vx0 = 0.0;
-        time = 0.0;
+        //  Reset the bagBall
+        bBall = new bagBall(0.5, 1.7, 0.0, 0.0, 0.0);
 
         //  Update the display.
         UpdateDisplay();
@@ -195,6 +178,9 @@ public class BeanBag : Form
 
         //  Update the position of the beanbag
         //  on the screen.
+        double x = bBall.GetX();
+        double z = bBall.GetZ();
+
         int xPosition = (int)(100.0 * x);
         double deltaZ = z - 1.25;
         int zPosition = (int)(125 - 100.0 * deltaZ);
@@ -210,24 +196,18 @@ public class BeanBag : Form
         //  Update the time and compute the new position
         //  of the beanbag. 
         double timeIncrement = 0.05;
-        time += timeIncrement;
+        bBall.UpdateLocationAndVelocity(timeIncrement);
 
-        //  There is no force in the x-direction, so the
-        //  new x location is the initial x location plus
-        //  the product of the horizontal velocity and time.
-        //        x = ???
-
-        //  The z-location is influenced by the acceleration
-        //  due to gravity.
-        double g = -9.81;
-        //        z = ???
+        // Descomenteu per mirar si s'actualitzen les posicions
+        // Console.WriteLine("time=" + (float)bBall.GetTime() +
+        // "  x=" + (float)bBall.GetX() + "  z=" + (float)bBall.GetZ());
 
         //  Update the display
         UpdateDisplay();
 
         //  If the beanbag hits the ground, stop 
         //  the simulation.
-        if (z <= 1.4)
+        if (bBall.GetZ() <= 1.4)
         {
             gameTimer.Stop();
         }
