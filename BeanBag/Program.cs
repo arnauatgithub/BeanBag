@@ -57,14 +57,14 @@ public class BeanBag : Form
         //  Create TextBox objects to display the outcome.
         vxTextBox = new TextBox();
         vxTextBox.Width = 50;
-        vxTextBox.Text = "2.5";
+        vxTextBox.Text = String.Format("{0}", 2.5m);
         vxTextBox.AutoSize = true;
         vxTextBox.Top = vxLabel.Top;
         vxTextBox.Left = 200;
 
         vzTextBox = new TextBox();
         vzTextBox.Width = 50;
-        vzTextBox.Text = "2.0";
+        vzTextBox.Text = String.Format("{0}", 2.0m);
         vzTextBox.AutoSize = true;
         vzTextBox.Top = vzLabel.Top;
         vzTextBox.Left = 200;
